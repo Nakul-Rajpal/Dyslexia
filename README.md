@@ -2,15 +2,15 @@
 
 To start code:
 
-1. Go into frontend and server dir and run the command: npm i
+1. Go into frontend and server dir and run the command: 'npm i'
 
 2. Enter the OPENAI APi key into the index.js file.
 
-3. go back to the server dir and run the command: npm install -g nodemon
+3. go back to the server dir and run the command: zsh npm install -g nodemon
 
 4. run the server using the command: nodemon index.js
 
-5. go back to the frontend dir and run the command: npm run dev
+5. go back to the frontend dir and run the command: zsh npm run dev
 
 6. Copy the link and go to the website
 
