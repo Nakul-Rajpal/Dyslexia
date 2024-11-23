@@ -1,15 +1,23 @@
-# CS5170-GPT-React-Workshop
+# Dyslexia/Dyscalculia Translator
 
-Follow along workshop for CS5170
+To start code:
 
-To install necessary software go the project root folders for both the frontend and server folders, and enter: `npm i`
+1. Go into frontend and server dir and run the command: npm i
 
-Enter the server folder, and run `npm install -g nodemon`
+2. Enter the OPENAI APi key into the index.js file.
 
-Enter your OPENAI api key in the corresponding server file.
+3. go back to the server dir and run the command: npm install -g nodemon
 
-First run the server with `nodemon index.js` from the server folder.
+4. run the server using the command: nodemon index.js
 
-Then, from a different terminal window, run the frontend with `npm run dev` from the frontend folder.
+5. go back to the frontend dir and run the command: npm run dev
 
-NOTE: Your editor may show errors when using `react-hook-form` in a couple of the components, such as: `Module '"react-hook-form"' has no exported member 'useForm'.` This should not prevent the code from running, and can be ignored.
+6. Copy the link and go to the website
+
+Its functionality is supposed to help break down questions for those with dyslexia and dyscalculia. 
+
+The server is for the backend, which handles the API request and prompt engineering, and the frontend is for the front end web interface. It holds the query form component.
+
+The code connectsbetween the backend and front end with response queries.
+
+
