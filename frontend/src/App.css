@@ -7,60 +7,72 @@
     background-color: #ffe5d9; /* Warm peach background */
     min-height: 100vh; /* Fullscreen height */
     box-sizing: border-box;
-  }
-  
-  /* Header styles */
-  .app-header {
+}
+
+/* Header styles */
+.app-header {
     text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .app-title {
-    font-size: 2.5rem;
+    margin-bottom: 30px; /* Increased spacing for better visibility */
+}
+
+.app-title {
+    font-size: 3.5rem; /* Larger font for the title */
     font-weight: bold;
     color: #4a2c2a;
     margin: 0;
-  }
-  
-  .app-description {
-    font-size: 1.2rem;
+}
+
+.app-description {
+    font-size: 1.5rem; /* Larger font for the description */
     color: #6f4d4c;
-    margin-top: 10px;
-    line-height: 1.5;
-  }
-  
-  /* Input form styling */
-  form {
+    margin-top: 15px;
+    line-height: 1.8; /* More spacing between lines */
+}
+
+/* Input form styling */
+form {
     display: flex;
     flex-direction: column;
-    gap: 15px; /* Add spacing between inputs */
-  }
-  
-  input[type="text"] {
-    font-size: 1.2rem;
-    padding: 15px;
-    margin-bottom: 10px;
+    gap: 20px; /* Add more spacing between inputs */
+}
+
+input[type="text"], textarea {
+    font-size: 1.5rem; /* Larger font size for input fields */
+    padding: 20px; /* Increased padding for a spacious feel */
+    margin-bottom: 15px;
     border: 1px solid #cccccc;
-    border-radius: 5px;
+    border-radius: 8px; /* More rounded corners */
     width: 100%; /* Fullscreen width */
     box-sizing: border-box; /* Include padding in width */
-    height: 80px; /* Increase the height of text boxes */
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Button styling */
-  button[type="submit"] {
-    font-size: 1.2rem;
-    padding: 15px;
+    height: 100px; /* Taller input boxes */
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1); /* More pronounced shadow */
+    resize: none; /* Disable resizing for textareas */
+}
+
+/* Button styling */
+button[type="submit"] {
+    font-size: 1.5rem; /* Larger font size for button text */
+    padding: 20px; /* Larger button for better usability */
     background-color: #ff7f50; /* Coral button color */
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px; /* More rounded corners */
     cursor: pointer;
     transition: background-color 0.3s ease;
-  }
-  
-  button[type="submit"]:hover {
+}
+
+button[type="submit"]:hover {
     background-color: #e06b45; /* Darker coral on hover */
-  }
-  
+}
+
+/* Add spacing and larger font for response box */
+.response-box {
+    font-size: 1.5rem; /* Larger font size for responses */
+    padding: 20px;
+    margin-top: 30px;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    line-height: 1.8; /* Better readability */
+}

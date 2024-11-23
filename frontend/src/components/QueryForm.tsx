@@ -1,124 +1,105 @@
-/**
- * This file contains the defition and logic for the creating a query form component.
- * This includes the submit button as well since this is treated as a form.
- * The component interacts with the backend using pre-defined routes imported from the backend-services module.
- * @author Christopher Curtis
- */
-import { FieldValues, useForm } from "react-hook-form";
-import { z } from "zod";
-import { useState } from "react";
-import {
-  // Backend model route options
-  createResponseService, // Default
-} from "../services/backend-service";
-import ExpandableText from "./ExpandableText";
+import React, { useState } from "react";
 
-// This defines the schema for the form used, expand here for form input validation
-const schema = z.object({
-  subject: z.string(),
-  modifier: z.string(),
-  additional: z.string(),
-});
-type FormData = z.infer<typeof schema>;
+// Component for taking user input and sending it to the server
+const QueryForm: React.FC = () => {
+  // State variables for context, question, response, error, and loading status
+  const [context, setContext] = useState<string>("Dyslexia"); // Context selector (Dyslexia or Dyscalculia)
+  const [question, setQuestion] = useState<string>(""); // User's question
+  const [response, setResponse] = useState<string | null>(null); // Response from the server
+  const [error, setError] = useState<string | null>(null); // Error message
+  const [isLoading, setIsLoading] = useState<boolean>(false); // Loading state
 
-/**
- * Formats the string in a parsable way for the GPT model on the backend
- * @param subject the subject to ask the GPT model about
- * @param modifier tone modifiers to tailor the response
- * @param additional additional info the for the model to be aware of
- * @return formated string to be sent as query to model
- */
-const formatString = (
-  subject: string,
-  modifier: string,
+  /**
+   * Handles form submission to send the user input to the server.
+   * Validates input, makes an API call, and updates response or error states.
+   */
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); // Prevents page reload on form submit
 
-) => {
-  return (
-    "Please list dyslexia or dyscalculia" +
-    subject +
-    "], Please enter your problem:  [" +
-    modifier +
-    "]"
-  );
-};
+    // Check if question is empty
+    if (!question.trim()) {
+      setError("Please enter a question."); // Show error message
+      return;
+    }
 
-/**
- * Creates a query box, interacting with a gpt backend service.
- * Created using a React Hook Form, with fields as defined in the above schema.
- * @returns a QueryBox component
- */
-const QueryForm = () => {
-  // These variables are used for interacting with the form's state
-  const {
-    register, // Tracks the form fields
-    handleSubmit, // Calls the on-submit logic
-    formState: { errors, isValid }, // Tracks errors and wether or not the form is valid
-  } = useForm<FormData>();
+    setError(null); // Clear any previous errors
+    setIsLoading(true); // Show loading state
 
-  // These variables trach the state of the component
-  const [isLoading, setIsLoading] = useState(false); // Wether to show loading animation or not
-  const [error, setError] = useState(""); // The error message (if any)
-  const [queryResponse, setQueryResponse] = useState(""); // The most recent query response
-
-  // Handles the on-sumbit logic for the form
-  const onSubmit = (data: FieldValues) => {
-    console.log(data);
-    setIsLoading(true); // Triggers the loading animation
-
-    // Creates post request for backend gpt model
-    const { request, cancel } = createResponseService().postMessages([
-      {
-        role: "user",
-        content: formatString(data.subject, data.modifier),
-      },
-    ]);
-
-    // Request is sent
-    request
-      .then((res) => {
-        // Succesful request logic
-        setQueryResponse(res.data); // We update the most recent query response
-        console.log(res.data);
-        setIsLoading(false); // We stop the loading animation
-      })
-      .catch((err) => {
-        // Error handling logic
-        setError(err.message); // We display the error message
-        setIsLoading(false); // We stop the loading animation
+    try {
+      // Send request to the backend server
+      const res = await fetch("http://localhost:8080/response", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Specify JSON format
+        },
+        body: JSON.stringify({
+          params: {
+            context, // Include context (Dyslexia or Dyscalculia)
+            userInput: question, // Include user's question
+          },
+        }),
       });
+
+      // Check if server returned an error
+      if (!res.ok) {
+        throw new Error("Failed to fetch response from the server.");
+      }
+
+      // Get the server's response as plain text
+      const data = await res.text();
+      setResponse(data); // Update response state with server reply
+    } catch (err) {
+      console.error(err); // Log the error
+      setError("An error occurred while processing your request."); // Show error message
+    } finally {
+      setIsLoading(false); // Stop loading state
+    }
   };
 
-  // We return the react markup needed for the component
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {error && <p className="text-danger">{error}</p>}
-        <div className="mb-3">
-          <label htmlFor="subject" className="form-label">
-            Please enter either Dyslexia or Dyscalculia Below.
-          </label>
-          <input
-            {...register("subject")}
-            id="subject"
-            type="text"
+      {/* Form for user input */}
+      <form onSubmit={handleSubmit}>
+        <label>
+          {/* Dropdown for selecting context */}
+          Select Context:
+          <select
+            value={context}
+            onChange={(e) => setContext(e.target.value)} // Update context state
             className="form-control"
-          />
-
-          <label htmlFor="modifier" className="form-label">
-            Enter Question below
-          </label>
-          <input
-            {...register("modifier")}
-            id="modifier"
-            type="text"
+          >
+            <option value="Dyslexia">Dyslexia</option>
+            <option value="Dyscalculia">Dyscalculia</option>
+          </select>
+        </label>
+        <br />
+        <label>
+          {/* Text area for entering a question */}
+          Enter Question:
+          <textarea
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)} // Update question state
+            placeholder="Enter your question here"
             className="form-control"
+            rows={5}
           />
-        </div>
-        <button className="btn btn-primary mb-3">Submit</button>
+        </label>
+        <br />
+        {/* Submit button with loading indicator */}
+        <button type="submit" className="btn btn-primary">
+          {isLoading ? "Submitting..." : "Submit"}
+        </button>
       </form>
 
-      {isLoading && <div className="spinner-border"></div>}
-      <ExpandableText>{queryResponse}</ExpandableText>
+      {/* Display the response from the server */}
+      {response && (
+        <div className="response-box">
+          <h3>Response:</h3>
+          <p>{response}</p>
+        </div>
+      )}
+      {/* Display any error messages */}
+      {error && <p className="text-danger">{error}</p>}
     </div>
   );
 };
